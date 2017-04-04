@@ -8,27 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/noahlotzer/react-simple-boilerplate.git"
+    "url": "https://github.com/violetreader/chattyAppBoilerPlate.git"
+
   },
-  "keywords": [
-    "react",
-    "reactjs",
-    "boilerplate",
-    "reload",
-    "live",
-    "edit",
-    "webpack"
-  ],
-  "author": "Noah-Jerome Lotzer <n.lotzer@neusta.de>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/noahlotzer/react-simple-boilerplate/issues"
-  },
-  "homepage": "https://github.com/noahlotzer/react-simple-boilerplate",
   "engines": {
     "node": ">=6.0.0"
   },
-  "devDependencies": {
+
+"devDependencies": {
     "babel-core": "6.10.4",
     "babel-loader": "6.0.1",
     "babel-preset-es2015": "6.9.0",
