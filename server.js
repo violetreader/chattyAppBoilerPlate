@@ -5,8 +5,9 @@ var config = require('./webpack.config');
 new WebpackDevServer(webpack(config), {
     publicPath: config.output.publicPath,
     watchOptions: {
+      ignored: /node_modules/,
       aggregateTimeout: 300,
-      poll: 1000
+      poll: 2000
     }
   })
   .listen(3000, '0.0.0.0', function (err, result) {
