@@ -54,8 +54,8 @@ wss.on('connection', (ws) => {
 
     newMess.id = messId;
     // console.log("this is new gener id: ", newMess.id);
-    newMess.username = parsedData.username;
-    newMess.message = parsedData.messageInput;
+    newMess.username = parsedData[0].username;
+    newMess.message = parsedData[0].content;
     const message = messages.concat(newMess);
     console.log("this is mess3: ", message);
 

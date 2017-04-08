@@ -10,16 +10,16 @@ class ChatBar extends Component {
   }
 
   userInput(e) {
+    const input= document.getElementById("chatbar-message").value;
+    const username= document.getElementById("chatBar-username").value;
     if (e.key != 'Enter') {
       event.preventDefault();
       return;
     }
+
     if (e.key === 'Enter') {
-      console.log("send info up to Parent!!")
-      let input= document.getElementById("chatbar-message").value;
-      let username= document.getElementById("chatBar-username").value;
       this.props.newMessage(username, input);
-      // input.value='';
+      // content.value='';
     }
   }
 
@@ -27,7 +27,10 @@ class ChatBar extends Component {
     // console.log("what is this in ChtBar: ", this.props.content);
     return (
       <footer className="chatbar">
-        <input id="chatBar-username" className="chatbar-username" placeholder={this.props.currentUser.name} />
+        <input id="chatBar-username" className="chatbar-username" placeholder={this.props.currentUser.name}
+          onKeyDown={(e)=>{
+          this.userInput(e)
+          }}/>
         <input id="chatbar-message" className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyDown={(e)=>{
             this.userInput(e)
         }}/>

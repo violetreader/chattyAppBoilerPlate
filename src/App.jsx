@@ -16,7 +16,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentUser: {name: "Bob"},
+      currentUser: {name: "Anonymous"},
       messages: [
         // id:
         // username:
@@ -27,43 +27,58 @@ class App extends Component {
 
 
 
-// ---------NEW MESSAGE ---------
+// ---------NEW MESSAGE --------- irrevelant now ?
 
-//   addNewMessage(username, content) {
-//     let newMessage = {};
-//     let lastElementId = this.state.messages[this.state.messages.length -1].id;
-//     newMessage.id = lastElementId + 1;
-//     // look at the last thing in this.state.messages
+  addNewMessage(username, content) {
 
-//     // look at the last thing's id
+    let newMessage = {};
+    let lastElementId = this.state.messages[this.state.messages.length -1].id;
+    newMessage.id = lastElementId + 1;
+    // look at the last thing in this.state.messages
 
-//     // add 1 to the last thing's id
-//     // ^^^ becomes newMessage.id
+    // look at the last thing's id
 
-// //adding new dynamic key, value pairs to your newMessage object above.
-// //concat returns a new array. You can have objects in thes elements
-// //you put a state in messages object so you can set it below, so it becomes dynamic and a user can interact w yur app and things can
-// //change based on that interaction
-//     newMessage.username = username
-//     newMessage.content = content
-//     const messages2 = this.state.messages.concat(newMessage);
-//     this.setState({messages: messages2});
+    // add 1 to the last thing's id
+    // ^^^ becomes newMessage.id
 
-//   }
+//adding new dynamic key, value pairs to your newMessage object above.
+//concat returns a new array. You can have objects in thes elements
+//you put a state in messages object so you can set it below, so it becomes dynamic and a user can interact w yur app and things can
+//change based on that interaction
+    newMessage.username = username
+    newMessage.content = content
+    const messages2 = this.state.messages.concat(newMessage);
+    this.setState({messages: messages2});
+
+  }
 
 // ---------- NEW MESSAGE TO BE BROADCASTED TO ALL CLIENTS
   sendMessToServer(username, content) {
+
     let newMessage = {};
-    newMessage.username = username
-    newMessage.messageInput = content
+    newMessage.username = username;
+    newMessage.content = content;
+    const messages = this.state.messages.concat(newMessage);
+
     // const message3 = this.state.messages.concat(newMessage);
     // console.log("this is newMessage: ", newMessage);
     // let user= JSON.stringify(username);
     // let input= JSON.stringify(content);
-    newMessage = JSON.stringify(newMessage);
-    this.socket.send(newMessage);
+    this.setState({messages:messages});
+    var sendData = JSON.stringify(messages);
+
+    this.socket.send(sendData);
+    document.getElementById("chatbar-message").value='';
   }
 
+
+// ----- METHOD THAT WILL SEND DATA TO CLIENT
+
+  sendToClient(data) {
+    let input = document.getElementById("chatbar-message").value;
+     // input= data;
+     // this.socket.
+  }
 
 
 //------ CREATING CONNECTIONS TO SERVER
@@ -112,8 +127,28 @@ class App extends Component {
 //below is for when you get a message back from server
     this.socket.onmessage = function (messageEvent) {
       console.log("whats this?", messageEvent);
-      let parsedData = JSON.parse(messageEvent.data);
-      console.log("Parsed messData: ", parsedData);
+
+      var parsedMessage = JSON.parse(messageEvent.data);
+      var id = parsedMessage.id;
+      var username = parsedMessage.username;
+      var content = parsedMessage.message;
+
+      const newMessage = { id:id, username:username, content:content};
+      const messages = this.state.messages.concat(newMessage);
+
+      // switch(this.parsedData) {
+      //   case "username":
+      //     sendToClient(this.name);
+      //     break;
+      //   case "message":
+      //     sendToClient(this.content);
+      //     break;
+      //   default:
+      //     console.log("what goes here?");
+      //     break;
+      // }
+      this.setState({messages:messages});
+
     }
 
     // console.log("componentDidMount <App />");
@@ -140,7 +175,7 @@ class App extends Component {
           <a href="/" className="navbar-brand">Chatty</a>
         </nav>
         <MessageList messages={this.state.messages} />
-        <ChatBar currentUser= {this.state.currentUser} newMessage={this.sendMessToServer.bind(this)} />
+        <ChatBar currentUser= {this.state.currentUser} newMessage={ this.sendMessToServer.bind(this) } />
       </div>
     )
   }
