@@ -2,16 +2,11 @@ import React, {Component} from 'react';
 
 import Message from './Message.jsx';
 
+
 class MessageList extends Component {
 
   render() {
-
     let messages = this.props.messages;
-    // console.log(this.props);
-    // console.log(this.props.messages);
-    // console.log(this.props.messages[0]);
-    // console.log(this.props.messages[0].content);
-
 
       return (
         <main className="messages">

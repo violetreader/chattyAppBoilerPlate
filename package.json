@@ -1,4 +1,4 @@
-{
+  {
   "name": "react-simple-boilerplate",
   "version": "1.0.0",
   "description": "Simple and lightweight Boilerplate for ReactJS projects",
@@ -30,8 +30,12 @@
     "webpack-dev-server": "1.14.1"
   },
   "dependencies": {
+    "bufferutil": "^3.0.0",
+    "fs": "*",
     "node-uuid": "1.4.8",
     "react": "15.2.1",
-    "react-dom": "15.2.1"
+    "react-dom": "15.2.1",
+    "utf-8-validate": "^3.0.1",
+    "ws": "^2.2.3"
   }
 }
