@@ -3,11 +3,9 @@
 const express = require('express');
 const WebSocket = require('ws');
 const SocketServer = WebSocket.Server;
-// const http = require('http');
 const uuidV4 = require('uuid/v4');
-// uuidV4(); // -> '110ec58a-a0f2-4ac4-8393-c866d813b8d1'
+// uuidV4(); // -> '110ec58a-a0f2-4ac4-8393-c866d813b8d1'   GIVES US OUR UNIQUE ID
 
-// Set the port to 3001
 const PORT = 3001;
 
 // Create a new express server
@@ -18,7 +16,6 @@ const server = express()
   .use(express.static('public'))
   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on ${ PORT }`));
 
-// const server2 = http.createServer(server);
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 
@@ -35,32 +32,44 @@ wss.broadcast = function broadcast(data) {
   });
 }
 
+let nextSocketId = 1;
+const sockets = {};
 
 wss.on('connection', (ws) => {
   console.log('Client is connected to the server');
 
+  const socketId = nextSocketId;
+  nextSocketId++;
+
+  console.log("new connection", socketId);
 
 // messageEvent is the message coming from the client!
   ws.on('message', (messageEvent)=> {
-      // ------ CREATE UNIQUE ID FOR MESSAGES HERE + empy arr/obj
+      // ------ CREATE UNIQUE ID FOR MESSAGES HERE 
     let messId = uuidV4();
-    // messages = [];
     let newMess = {};
+
   // will print on console of server in frames
     console.log("recieved messge: ", messageEvent);
-  // put id, name, input in the  new obj below
-  //JSON parse turns data into obj so yu can work w it
     let parsedData = JSON.parse(messageEvent);
-    // console.log("is this an obj to wrk w?: ", parsedData);
 
-    newMess.id = messId;
-    // console.log("this is new gener id: ", newMess.id);
-    newMess.username = parsedData.username;
+    let messageType = parsedData.type
+
+    if (messageType == "Post Message") {
+      newMess.type = "Incoming Message";
+      newMess.notice = "New Message!";
+    }
+    if (messageType == "Post Notification") {
+      newMess.type = "Incoming Notification";
+    }
+
     newMess.content = parsedData.content;
+    newMess.socketNumber = nextSocketId;
+    newMess.id = messId;
+    newMess.username = parsedData.username;
     console.log("this is message before stringify and broadcasted: ", newMess);
     let stringifyMessage = JSON.stringify(newMess) 
 
-    // wss.broadcast(stringifyMessage);
    wss.broadcast(stringifyMessage);
 
 

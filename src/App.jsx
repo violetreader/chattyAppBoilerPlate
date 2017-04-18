@@ -15,25 +15,39 @@ class App extends Component {
 
     this.state = {
       currentUser: {name: "What's Your Name?"},
-      messages: [] // messages coming from the server will be stored here as they arrive
+      messages: [{
+        type: null,
+        id: 0,
+        username: null,
+        content: null
+      }] // messages coming from the server will be stored here as they arrive
     };
   }
 
 
 // ---------- NEW MESSAGE TO BE BROADCASTED TO ALL CLIENTS
   sendMessToServer(username, content) {
-
+  
+    if (username != this.state.currentUser.name) {
+      let changedNameMsg = {};
+      changedNameMsg.type = "Post Notification"
+      changedNameMsg.content = this.state.currentUser.name + " changed their name to " + username;
+      let sendData = JSON.stringify(changedNameMsg);
+      this.socket.send(sendData);
+      this.setState({
+          currentUser: {name: username}
+        });
+    }
     // -- Create the new message
     let newMessage = {};
-    // let lastElementId = this.state.messages[this.state.messages.length -1].id;
-    // newMessage.id = lastElementId + 1;
+    newMessage.type = "Post Message"; 
     newMessage.username = username;
     newMessage.content = content;
 
     // -- Send message to server
     let sendData = JSON.stringify(newMessage);
     this.socket.send(sendData);
-
+    
     // -- clear input
     document.getElementById("chatbar-message").value='';
   }
@@ -53,36 +67,30 @@ class App extends Component {
 
 //call function below when server "pushes" messages/data down to browser
     this.socket.onmessage = (messageEvent) => {
-      console.log("whats this?", messageEvent);
 
       var parsedMessage = JSON.parse(messageEvent.data);
 
       // -- Updating state to show the new message immediately
+      
+      this.socketNumb = parsedMessage.socketNumber;
+
       const messages = this.state.messages.concat(parsedMessage);
-      this.setState({messages:messages});
-
-      // switch(parsedMessage.type) {
-      //   case 'onKeyDown':
-
-      //   break;
-      //   default 
-      //   console.log("not onkeyDown so this code happened")
-      // }
-
+        this.setState({
+          messages: messages
+        });
     }
   }
 
-  // ELSEWHERE
 
   render() {
-    // console.log("Rendering <App/>");
 
     return (
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
+          <p className="sockets"> {this.socketNumb} users online </p>
         </nav>
-        <MessageList messages={this.state.messages} />
+        <MessageList messages={this.state.messages} notif={this.notice} />
         <ChatBar currentUser= {this.state.currentUser} newMessage={ this.sendMessToServer.bind(this) } />
       </div>
     )
