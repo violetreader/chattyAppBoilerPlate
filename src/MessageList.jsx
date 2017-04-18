@@ -11,6 +11,7 @@ class MessageList extends Component {
     // console.log(this.props.messages);
     // console.log(this.props.messages[0]);
     // console.log(this.props.messages[0].content);
+    console.log("messages in this.props: ", messages)
 
 
       return (

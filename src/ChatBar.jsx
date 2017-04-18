@@ -19,7 +19,6 @@ class ChatBar extends Component {
 
     if (e.key === 'Enter') {
       this.props.newMessage(username, input);
-      // content.value='';
     }
   }
 
@@ -27,10 +26,9 @@ class ChatBar extends Component {
     // console.log("what is this in ChtBar: ", this.props.content);
     return (
       <footer className="chatbar">
-        <input id="chatBar-username" className="chatbar-username" placeholder={this.props.currentUser.name}
-          onKeyDown={(e)=>{
-          this.userInput(e)
-          }}/>
+        <input id="chatBar-username" className="chatbar-username" placeholder={this.props.currentUser.name} onKeyDown={(e)=>{
+            this.userInput(e)
+        }}/>
         <input id="chatbar-message" className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyDown={(e)=>{
             this.userInput(e)
         }}/>
