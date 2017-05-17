@@ -7,7 +7,6 @@ class MessageList extends Component {
   render() {
 
     let messages = this.props.messages;
-    console.log("inside messgeLIst: ", this.props.messages);
 
       return (
         <main className="messages">

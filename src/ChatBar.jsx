@@ -5,8 +5,6 @@ class ChatBar extends Component {
 
   constructor(props) {
     super(props);
-    this.state= {
-    };
   }
 
   userInput(e) {
@@ -23,7 +21,6 @@ class ChatBar extends Component {
   }
 
   render() {
-    // console.log("what is this in ChtBar: ", this.props.content);
     return (
       <footer className="chatbar">
         <input id="chatBar-username" className="chatbar-username" placeholder={this.props.currentUser.name} onKeyDown={(e)=>{
@@ -33,7 +30,7 @@ class ChatBar extends Component {
             this.userInput(e)
         }}/>
       </footer>
-    )
+    );
   }
 }
 

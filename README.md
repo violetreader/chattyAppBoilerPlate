@@ -42,3 +42,17 @@ npm run lint
 * Webpack
 * [babel-loader](https://github.com/babel/babel-loader)
 * [webpack-dev-server](https://github.com/webpack/webpack-dev-server)
+
+
+
+
+
+*************************************************************************
+
+
+
+An interactive communication session between a user's browser and a server. Users communicate with each other using two WebSocket connections between a server and a client. The number of online users is seen on the navigation bar and as an user you can see when other users change their name as a notification message in the chat.
+
+
+
+

@@ -1,31 +1,21 @@
 import React, {Component} from 'react';
-
 import MessageList from './MessageList.jsx';
-
+// import ChatBar from './AutoFocusTextInput.jsx';
 import ChatBar from './ChatBar.jsx';
-
-// this will make the variable and its containments a PROPERTY of the component it's set in
-// making it accisble to other methods
 
 class App extends Component {
 
-// setting initial state 
   constructor(props) {
     super(props)
-
     this.state = {
-      currentUser: {name: "What's Your Name?"},
-      messages: [{
-        type: null,
-        id: 0,
-        username: null,
-        content: null
-      }] // messages coming from the server will be stored here as they arrive
+      currentUser: {name: "User"},
+      messages: [], // messages coming from the server will be stored here as they arrive
+      usersOnline: 0
     };
   }
 
 
-// ---------- NEW MESSAGE TO BE BROADCASTED TO ALL CLIENTS
+// ---------- BROADCASTED TO ALL CLIENTS
   sendMessToServer(username, content) {
   
     if (username != this.state.currentUser.name) {
@@ -38,17 +28,18 @@ class App extends Component {
           currentUser: {name: username}
         });
     }
-    // -- Create the new message
+
+    // -- Creates the new message
     let newMessage = {};
     newMessage.type = "Post Message"; 
     newMessage.username = username;
     newMessage.content = content;
 
-    // -- Send message to server
+    // -- Sending message to server
     let sendData = JSON.stringify(newMessage);
     this.socket.send(sendData);
     
-    // -- clear input
+    // -- clearing input
     document.getElementById("chatbar-message").value='';
   }
 
@@ -56,28 +47,28 @@ class App extends Component {
 
   componentDidMount() {
 
-//      ------- CLIENT AND SERVER CODE BELOW
-
     var socket = new WebSocket('ws://localhost:3001');
     this.socket = socket;
 
+    // this is an event that is listening for a connection coming from server
     this.socket.onopen = function(data) {
-// SENDING A MESSAGE TO SERVER HERE INTERFERES WITH CHATTYAPP SENDING MESSAGES TO SERVER
     }
 
-//call function below when server "pushes" messages/data down to browser
     this.socket.onmessage = (messageEvent) => {
 
-      var parsedMessage = JSON.parse(messageEvent.data);
-
-      // -- Updating state to show the new message immediately
-      
-      this.socketNumb = parsedMessage.socketNumber;
-
-      const messages = this.state.messages.concat(parsedMessage);
+      const parsedMessage = JSON.parse(messageEvent.data);
+      if (!parsedMessage.usersOnline) {
+        const messages = this.state.messages.concat(parsedMessage);
         this.setState({
           messages: messages
         });
+        return;
+      }
+
+      let usersOnline = parsedMessage.usersOnline.number;
+      this.setState({
+        usersOnline: usersOnline
+      });
     }
   }
 
@@ -88,9 +79,9 @@ class App extends Component {
       <div>
         <nav className="navbar">
           <a href="/" className="navbar-brand">Chatty</a>
-          <p className="sockets"> {this.socketNumb} users online </p>
+          <p className="sockets"> {this.state.usersOnline} users online </p>
         </nav>
-        <MessageList messages={this.state.messages} notif={this.notice} />
+        <MessageList messages={this.state.messages} />
         <ChatBar currentUser= {this.state.currentUser} newMessage={ this.sendMessToServer.bind(this) } />
       </div>
     )
